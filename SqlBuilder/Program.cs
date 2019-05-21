@@ -18,35 +18,42 @@ namespace SqlBuilder
                 new User { Id = 5, AccessCount = 4, Birth = DateTime.Now.AddYears(-40), Name = "Tony Stark", Email = "imironman@stark.com", Password="@#$%qwtfQWT%q3t5" },
             };
 
-            var whereTranslator = new WhereTranslator();
+            var translator = new SqlTranslator();
 
             var accessCount = 9;
             var mostAccessExpression1 = users.AsQueryable().Where(e => e.AccessCount > accessCount).Expression;
-            var mostAccessWhere1 = whereTranslator.BuildExpression(mostAccessExpression1);
+            var mostAccessWhere1 = translator.BuildExpression(mostAccessExpression1);
             Console.WriteLine("most access, sample #1:");
             Console.WriteLine(mostAccessWhere1);
             Console.WriteLine();
 
+
             var mostAccessExpression2 = users.AsQueryable().Where(e => e.AccessCount >= 10).Expression;
-            var mostAccessWhere2 = whereTranslator.BuildExpression(mostAccessExpression2);
+            var mostAccessWhere2 = translator.BuildExpression(mostAccessExpression2);
             Console.WriteLine("most access, sample #2:");
             Console.WriteLine(mostAccessWhere2);
             Console.WriteLine();
 
+            var mostAccessOrderedExpression = users.AsQueryable().OrderBy(e => e.AccessCount).Expression;
+            var mostAccessOrdered = translator.BuildExpression(mostAccessOrderedExpression);
+            Console.WriteLine("most access ordered:");
+            Console.WriteLine(mostAccessOrdered);
+            Console.WriteLine();
+
             var userByMailExpression = users.AsQueryable().Where(e => e.Email == "thanos@half.com").Expression;
-            var userByMailWhere = whereTranslator.BuildExpression(userByMailExpression);
+            var userByMailWhere = translator.BuildExpression(userByMailExpression);
             Console.WriteLine("user by mail:");
             Console.WriteLine(userByMailWhere);
             Console.WriteLine();
 
             var loginExpression = users.AsQueryable().Where(e => e.Email == "thanos@half.com" && e.Password == "halfofuniverse").Expression;
-            var loginWhere = whereTranslator.BuildExpression(loginExpression);
+            var loginWhere = translator.BuildExpression(loginExpression);
             Console.WriteLine("login:");
             Console.WriteLine(loginWhere);
             Console.WriteLine();
 
             var nameAndMailAreEqualExpression = users.AsQueryable().Where(e => e.Email == e.Name).Expression;
-            var nameAndMailWhere = whereTranslator.BuildExpression(nameAndMailAreEqualExpression);
+            var nameAndMailWhere = translator.BuildExpression(nameAndMailAreEqualExpression);
             Console.WriteLine("name and mail are equal:");
             Console.WriteLine(nameAndMailWhere);
             Console.WriteLine();

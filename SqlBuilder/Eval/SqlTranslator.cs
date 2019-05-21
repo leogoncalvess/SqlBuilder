@@ -4,16 +4,25 @@ using System.Reflection;
 
 namespace SqlBuilder.Eval
 {
-    public class WhereTranslator
+    public class SqlTranslator
     { 
         public string BuildExpression(Expression expression)
         {
             switch (expression)
             {
                 case MethodCallExpression methodCallExpression:
+                    var typesExpression = (ConstantExpression)methodCallExpression.Arguments[0];
+                    var type = typesExpression.Value.GetType().GenericTypeArguments[0];
+                    var method = FormatMethod(methodCallExpression.Method.Name);
+
+                    var sqlStart = $"SELECT * FROM [{type.Name}] {method} ";
+
                     var condition = (UnaryExpression)methodCallExpression.Arguments[1];
                     var lambda = (LambdaExpression)condition.Operand;
-                    return BuildExpression(lambda.Body);
+
+                    var sqlEnd = BuildExpression(lambda.Body);
+
+                    return sqlStart + sqlEnd;
                 case BinaryExpression binaryExpression:
                     var left = BuildExpression(binaryExpression.Left);
                     var right = BuildExpression(binaryExpression.Right);
@@ -75,6 +84,19 @@ namespace SqlBuilder.Eval
             var function = lambda.Compile();
             var result = function().ToString();
             return result;
+        }
+
+        private string FormatMethod(string value)
+        {
+            switch (value)
+            {
+                case "Where":
+                    return "WHERE";
+                case "OrderBy":
+                    return "ORDER BY";
+                default:
+                    return null;
+            }
         }
 
         private string FormatValue(object value) => $"'{value.ToString()}'";
