@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace SqlBuilder.Eval
 {
     public class SqlTranslator
-    { 
+    {
+        public string BuildExpression(IQueryable query) => BuildExpression(query.Expression);
+
         public string BuildExpression(Expression expression)
         {
             switch (expression)
