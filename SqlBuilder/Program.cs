@@ -10,6 +10,9 @@ namespace SqlBuilder
     {
         static void Main(string[] args)
         {
+            // -> example of how to implement a LINQ provider:
+            //      https://blogs.msdn.microsoft.com/mattwar/2008/11/18/linq-building-an-iqueryable-provider-series/
+
             var users = new List<User> {
                 new User { Id = 1, AccessCount = 2, Birth = DateTime.Now.AddYears(-18), Name = "Toothless Dragon", Email = "tooth@less.co", Password="123" },
                 new User { Id = 2, AccessCount = 666, Birth = DateTime.Now.AddYears(-50), Name = "The Joker", Email = "joker@batman.com", Password="321" },
